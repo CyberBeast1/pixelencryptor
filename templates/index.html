@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text Hider</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" /> 
+
+  </head>
+  <body>
+    <h1 class="heading">PixelEncryptor</h1>
+    <h1>Hide Text in Image</h1>
+    <form action="/hide" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" required />
+      <input
+        type="text"
+        name="message"
+        placeholder="Enter text to hide"
+        required
+      />
+      <button type="submit">Hide Text</button>
+    </form>
+
+    <h1>Extract Text from Image</h1>
+    <form action="/extract" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" required />
+      <button type="submit">Extract Text</button>
+    </form>
+  </body>
+</html>

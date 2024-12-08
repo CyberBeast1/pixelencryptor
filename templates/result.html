@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Result</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <style>
+      button {
+        margin: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="heading">Result</h1>
+    <span>{{ result | safe }}</span>
+    <br />
+    <div class="box">
+      {% if image_path %}
+      <h2>Output Image</h2>
+      <img
+        src="{{ url_for('static', filename=image_path) }}"
+        alt="Output Image"
+        style="
+          max-width: 350px;
+          max-height: 350px;
+          border: 5px solid #00ff00;
+          border-radius: 20px;
+        "
+      />
+      <br />
+      <span>
+        <a
+          href="{{ url_for('static', filename=image_path) }}"
+          download="output_image.png"
+        >
+          <button>Download Image</button>
+        </a>
+        {% endif %}
+        <a href="/"><button>Go Back</button></a>
+      </span>
+    </div>
+    <script>
+        if (window.location.href.endsWith('extract')) {
+            document.querySelector('div').classList.remove('box');
+        }
+    </script>
+  </body>
+</html>
+
+<!-- cyberSage#1425 -->
