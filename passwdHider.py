@@ -2,7 +2,7 @@ from PIL import Image
 from cryptography.fernet import Fernet
 import os
 
-def hide_text(image_path, text):
+def hide_text(image_path, text, save_key_to_image_path=None):
     try:
         image = Image.open(image_path).convert("RGB")
         binary_text = bytes_to_binary(text)
@@ -26,6 +26,30 @@ def hide_text(image_path, text):
                 if index >= len(binary_text):
                     break
         image.save('static/output_image.png')
+        if save_key_to_image_path is not None:
+            key = load_key()
+            key_image = Image.open(save_key_to_image_path).convert("RGB")
+            binary_text = bytes_to_binary(key)
+            binary_text += '00000000'  # Add a termination sequence (null character)
+            
+            pixels = key_image.load()
+            index = 0
+            for i in range(key_image.width):
+                for j in range(key_image.height):
+                    r, g, b = pixels[i, j]
+                    if index < len(binary_text):
+                        r = (r & 0xFE) | int(binary_text[index])
+                        index += 1
+                    if index < len(binary_text):
+                        g = (g & 0xFE) | int(binary_text[index])
+                        index += 1
+                    if index < len(binary_text):
+                        b = (b & 0xFE) | int(binary_text[index])
+                        index += 1
+                    pixels[i, j] = (r, g, b)
+                    if index >= len(binary_text):
+                        break
+            key_image.save('static/key.png')
         print("Text hidden successfully.")
     except Exception as e:
         print(f"An error occurred while hiding text: {e}")
@@ -70,11 +94,17 @@ def encrypt_message(message):
     encrypted_message = fernet.encrypt(message.encode())
     return encrypted_message
 
-def decrypt_message(encrypted_message):
+def decrypt_message(encrypted_message, load_key_from_image_path=None):
+    if load_key_from_image_path is not None:
+            load_key_from_image(load_key_from_image_path)
     key = load_key()
     fernet = Fernet(key)
-    decrypted_message = fernet.decrypt(encrypted_message).decode()
-    return decrypted_message
+    try:
+        decrypted_message = fernet.decrypt(encrypted_message).decode()
+        return decrypted_message
+    except Exception as e:
+        print(f"An error occurred while decrypting the message: {e}")
+        return ""
 
 def bytes_to_binary(encrypted_message):
     binary_string = ''
@@ -83,10 +113,18 @@ def bytes_to_binary(encrypted_message):
         binary_string += binary_byte
     return binary_string
 
+def load_key_from_image(imagePath):
+    key = extract_text(imagePath)
+    print(f"Key is : {key}")
+    key = key.encode('utf-8')
+    with open('master.key', 'wb') as f:
+        f.write(key)
+
 if __name__ == '__main__':
-    operation = input("Enter 'h' to hide text or 'e' to extract text or 'g' to generate key: ")
+    operation = input("Enter 'h' to hide text with encryption\n'hn' to only hide text\n'e' to extract encrypted text\n'en' to extract normal text\n'g' to generate key\n'l' to load key from image\nEnter option: ")
     if operation == 'h':
         message = input("Enter the text to hide: ")
+        imagePath = input("Enter the image path: ")
         
         # Encrypt the message info
         encrypted = encrypt_message(message)
@@ -95,15 +133,30 @@ if __name__ == '__main__':
         with open('message.bin', 'wb') as f:
             f.write(encrypted)
             
-        hide_text("image.png", encrypted)
+        hide_text(imagePath, encrypted)
+        
+    elif operation == 'hn':
+        message = input("Enter the text to hide: ")
+        imagePath = input("Enter the image path: ")
+        hide_text(imagePath, message.encode())
         
     elif operation == 'e':
-        hidden_text = extract_text('output_image.png')
+        imagePath = input("Enter the image path: ")
+        hidden_text = extract_text(imagePath)
         hidden_text = hidden_text.encode('utf-8')
         message = decrypt_message(hidden_text)
         
         print("Hidden message:", message)
         
+    elif operation == 'en':
+        imagePath = input("Enter the image path: ")
+        hidden_text = extract_text(imagePath)
+        print("Hidden message:", hidden_text)
+        
     elif operation == 'g':
         key = generate_key()
         print(f"Generated key: {key}")
+    elif operation == 'l':
+        imagePath = input("Enter the image path: ")
+        load_key_from_image(imagePath)
+        print(f"Key loaded from image.\From Image: {imagePath}")

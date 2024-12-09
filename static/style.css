@@ -1,14 +1,5 @@
-body{
-    overflow-y: scroll;
-}
-/* Reset some default styles */
-body, h1,h3,h4, form, input, button {
-    margin: 0;
-    padding: 0;
-}
-
-/* Set the background color and font */
 body {
+    overflow-y: scroll;
     background-color: #1e1e1e; /* Dark background */
     color: #00ff00; /* Bright green text for hacker feel */
     font-family: 'Share Tech Mono', monospace; /* Monospaced font */
@@ -17,58 +8,39 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh; /* Full height */
+    /* height: 140vh; */
+    margin: 0; /* Reset margin */
 }
 
-/* Blinking underline animation */
-
-@keyframes blink {
-    0%, 100% {
-        text-decoration: underline;
-        text-decoration-color: #00ff00; /* Set the color of the underline */
-    }
-    50% {
-        text-decoration: underline;
-        text-decoration-color: transparent; /* Hide the underline halfway */
-    }
-}
-/* Apply the blinking effect to h1 */
-.heading {
-    font-size: 6rem;
-    margin-bottom: 1.5rem;
-    text-shadow: 0 0 10px rgba(0, 255, 0, 0.7); /* Glow effect */
-    animation: blink 1s infinite; /* Apply the blink animation */
-}
-
-/* Style for the headings */
 h1 {
     font-size: 4rem;
     margin-bottom: 1.5rem;
     text-shadow: 0 0 10px rgba(0, 255, 0, 0.7); /* Glow effect */
 }
 
-/* Style for forms */
-.box, form {
+.heading {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.7); /* Glow effect */
+    animation: blink 1s infinite;
+}
+
+.box {
+    width: 30%;
     background-color: #2a2a2a; /* Slightly lighter background for forms */
     border-radius: 8px;
-    padding: 20px;
+    padding:  20px;
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.5); /* Glow effect */
     margin-bottom: 2rem;
     transition: transform 0.3s ease; /* Transition for hover effect */
-
-    &:hover{
-        transform: scale(1.02); /* Slight zoom effect on hover */
-    }
 }
 
-span{
-    width: 55%;
-    margin-bottom: 20px;
+.box:hover {
+    transform: scale(1.02); /* Slight zoom effect on hover */
 }
 
-/* Style for input fields */
-input[type="file"],
-input[type="text"] {
+.input-file,
+.input-text {
     width: 95%;
     padding: 15px;
     margin: 10px 0;
@@ -80,14 +52,12 @@ input[type="text"] {
     transition: background-color 0.3s ease; /* Transition for input background */
 }
 
-/* Change input background on focus */
-input[type="file"]:focus,
-input[type="text"]:focus {
+.input-file:focus,
+.input-text:focus {
     background-color: #444; /* Lighter background on focus */
 }
 
-/* Style for buttons */
-button {
+.button {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -99,28 +69,88 @@ button {
     transition: background-color 0.3s ease, transform 0.2s ease; /* Transition for background and scale */
 }
 
-/* Change button background on hover */
-button:hover {
+.button:hover {
     background-color: #00b300; /* Brighter green on hover */
     transform: scale(1.05); /* Slight zoom effect on hover */
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    body {
-        padding: 20px; /* Add padding on small screens */
-    }
+.output-image {
+    max-width: 350px;
+    max-height: 350px;
+    border: 5px solid #00ff00;
+    border-radius: 20px;
+}
 
+.box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.heading {
+    font-size: 6rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.7); /* Glow effect */
+    animation: blink 1s infinite; /* Apply the blink animation */
+    position: relative; /* Position for the cursor */
+}
+
+.heading::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 100%;
+    background-color: #00ff00; /* Cursor color */
+    animation: blink-caret 0.75s step-end infinite; /* Blinking effect */
+    left: 0; /* Position the cursor */
+    top: 0; /* Align with the text */
+}
+
+@keyframes blink-caret {
+    0%, 100% { background-color: transparent; }
+    50% { background-color: #00ff00; }
+}
+
+@media (max-width: 600px) {
+    .heading{
+        font-size: 3rem;
+    }
     h1 {
         font-size: 2rem; /* Smaller font size for headings */
     }
-
-    button {
-        width: 100%; /* Full width buttons on small screens */
+    .msg{
+        height: 100%;
+        width: 80%; /* Set a width that allows for some margin */
+        max-width: 600px; /* Set a maximum width to prevent it from being too wide */
+        word-wrap: break-word; /* Allow long words to break and wrap onto the next line */
+        text-align: center; /* Center the text for better appearance */
+        margin: 0 auto; /* Center the message block */
+        padding: 10px;
+    }
+    
+    .msg {
+        font-size: 1.1rem; /* Smaller font size for messages */
+    }
+    .button,
+    .input-file,
+    .input-text {
+        width: 100%; /* Full width on small screens */
     }
 
-    input[type="file"],
-    input[type="text"] {
-        width: 100%; /* Full width inputs on small screens */
+    .box {
+        width: 90%; /* Full width forms on small screens */
+        padding: 10px; /* Adjust padding */
+    }
+}
+
+@keyframes blink {
+    0%, 100% {
+        text-decoration: underline;
+        text-decoration-color: #00ff00; /* Set the color of the underline */
+    }
+    50% {
+        text-decoration: underline;
+        text-decoration-color: transparent; /* Hide the underline halfway */
     }
 }

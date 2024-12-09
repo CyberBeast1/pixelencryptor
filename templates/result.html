@@ -16,14 +16,34 @@
   </head>
   <body>
     <h1 class="heading">Result</h1>
-    <span>{{ result | safe }}</span>
+    <div class="msg">{{ result | safe }}</div>
     <br />
     <div class="box">
       {% if image_path %}
-      <h2>Output Image</h2>
+      <h2>Message Image</h2>
       <img
         src="{{ url_for('static', filename=image_path) }}"
-        alt="Output Image"
+        alt="Message Image"
+        style="
+          max-width: 350px;
+          max-height: auto;
+          border: 5px solid #00ff00;
+          border-radius: 20px;
+        "
+      />
+      <br />
+        <a
+          href="{{ url_for('static', filename=image_path) }}"
+          download="{{ url_for('static', filename=image_path) }}"
+        >
+          <button class="button">Download Image</button>
+        </a>
+        {% endif %}
+      {% if key_path %}
+      <h2>Key Image</h2>
+      <img
+        src="{{ url_for('static', filename=key_path) }}"
+        alt="Key Image"
         style="
           max-width: 350px;
           max-height: 350px;
@@ -32,23 +52,19 @@
         "
       />
       <br />
-      <span>
         <a
-          href="{{ url_for('static', filename=image_path) }}"
-          download="output_image.png"
+          href="{{ url_for('static', filename=key_path) }}"
+          download="{{ url_for('static', filename=key_path) }}"
         >
-          <button>Download Image</button>
+          <button class="button">Download Image</button>
         </a>
         {% endif %}
-        <a href="/"><button>Go Back</button></a>
-      </span>
+        <a href="/"><button class="button">Go Back</button></a>
     </div>
     <script>
-        if (window.location.href.endsWith('extract')) {
-            document.querySelector('div').classList.remove('box');
+        if (['extract', 'load', 'gen'].includes(window.location.pathname.replace('/',''))) {
+            document.getElementsByClassName('div')[1].classList.remove('box');
         }
     </script>
   </body>
 </html>
-
-<!-- cyberSage#1425 -->
